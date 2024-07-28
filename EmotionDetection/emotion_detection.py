@@ -11,31 +11,42 @@ def emotion_detector(text_to_analyse):
     # text to be analyzed
     response = requests.post(url, json=myobj, headers=headers)
 
-    formatted_response = json.loads(response.text)
-    emotions = (formatted_response['emotionPredictions'][0])
-
-    anger_score = emotions['emotion']['anger']
-    disgust_score = emotions['emotion']['disgust']
-    fear_score = emotions['emotion']['fear']
-    joy_score = emotions['emotion']['joy']
-    sadness_score = emotions['emotion']['sadness']
-
-    emo = {
-        anger_score: 'anger',
-        disgust_score: 'disgust',
-        fear_score:'fear',
-        joy_score: 'joy',
-        sadness_score: 'sadness'
-    }
-
-    dominant_emotion = max([anger_score, disgust_score, fear_score, joy_score, sadness_score])
-
     output = {
-        'anger': anger_score,
-        'disgust': disgust_score,
-        'fear': fear_score,
-        'joy': joy_score,
-        'sadness': sadness_score,
-        'dominant_emotion': emo[dominant_emotion]
+        'anger': 'None',
+        'disgust': 'None',
+        'fear': 'None',
+        'joy': 'None',
+        'sadness': 'None',
+        'dominant_emotion': 'None'
     }
+
+    formatted_response = json.loads(response.text)
+
+    if 'code' not in formatted_response:
+        emotions = (formatted_response['emotionPredictions'][0])
+        anger_score = emotions['emotion']['anger']
+        disgust_score = emotions['emotion']['disgust']
+        fear_score = emotions['emotion']['fear']
+        joy_score = emotions['emotion']['joy']
+        sadness_score = emotions['emotion']['sadness']
+
+        emo = {
+            anger_score: 'anger',
+            disgust_score: 'disgust',
+            fear_score: 'fear',
+            joy_score: 'joy',
+            sadness_score: 'sadness'
+        }
+
+        dominant_emotion = max([anger_score, disgust_score, fear_score, joy_score, sadness_score])
+
+        output = {
+            'anger': anger_score,
+            'disgust': disgust_score,
+            'fear': fear_score,
+            'joy': joy_score,
+            'sadness': sadness_score,
+            'dominant_emotion': emo[dominant_emotion]
+        }
+
     return output
